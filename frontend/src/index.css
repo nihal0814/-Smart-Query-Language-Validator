@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------
+   Design tokens
+   Aesthetic: a small "devtools / IDE inspector" panel, since the subject
+   of this app is literally parsing and inspecting query language text.
+   - Manrope (sans) carries UI copy.
+   - JetBrains Mono carries anything that is literal language material:
+     queries, tokens, grammar rules, automaton states.
+--------------------------------------------------------------------- */
+@theme {
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-bg: #0a0d14;
+  --color-surface: #10141d;
+  --color-surface-raised: #151a25;
+  --color-border: #222836;
+  --color-border-soft: #1a202c;
+
+  --color-indigo: #6366f1;
+  --color-indigo-soft: #4f46e5;
+  --color-cyan: #22d3ee;
+  --color-success: #34d399;
+  --color-success-soft: #10b981;
+  --color-error: #f87171;
+  --color-error-soft: #ef4444;
+  --color-warning: #fbbf24;
+
+  --color-text: #e6e9f2;
+  --color-text-dim: #9aa3b8;
+  --color-text-faint: #5c6478;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Subtle grid texture behind the whole app, like a schematic sheet */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+::selection {
+  background: rgba(99, 102, 241, 0.35);
+  color: #fff;
+}
+
+/* Thin, unobtrusive scrollbars that fit the dark IDE theme */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2a3142 transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #2a3142;
+  border-radius: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@keyframes blink-cursor {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.cursor-blink {
+  animation: blink-cursor 1s steps(1) infinite;
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.35s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-blink, .animate-fade-in-up, html {
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}
