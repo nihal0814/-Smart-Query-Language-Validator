@@ -55,6 +55,11 @@ Accept if the automaton ends in q1 or q3.
 
 from dataclasses import dataclass
 from typing import List
+import string
+
+
+ASCII_LETTERS = frozenset(string.ascii_letters)
+ASCII_DIGITS = frozenset(string.digits)
 
 
 @dataclass
@@ -67,9 +72,9 @@ class DFAResult:
 
 
 def _char_class_identifier(ch: str) -> str:
-    if ch.isalpha() or ch == "_":
+    if ch in ASCII_LETTERS or ch == "_":
         return "letter/_"
-    if ch.isdigit():
+    if ch in ASCII_DIGITS:
         return "digit"
     return "other"
 
@@ -107,7 +112,7 @@ def run_identifier_dfa(s: str) -> DFAResult:
 
 
 def _char_class_number(ch: str) -> str:
-    if ch.isdigit():
+    if ch in ASCII_DIGITS:
         return "digit"
     if ch == ".":
         return "dot"

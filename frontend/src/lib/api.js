@@ -2,7 +2,7 @@
 // Base URL comes from Vite env var VITE_API_URL, falling back to localhost
 // for local development (see .env.example).
 
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const BASE_URL = (import.meta.env.VITE_API_URL || "http://localhost:8000").replace(/\/+$/, "");
 
 async function post(path, body) {
   const res = await fetch(`${BASE_URL}${path}`, {
@@ -29,6 +29,7 @@ export const api = {
   validate: (query) => post("/api/validate", { query }),
   tokenize: (query) => post("/api/tokenize", { query }),
   dfaCheck: (value, kind) => post("/api/dfa-check", { value, kind }),
+  regexDfa: (regex, testString) => post("/api/regex-dfa", { regex, test_string: testString }),
 };
 
 export const API_BASE_URL = BASE_URL;

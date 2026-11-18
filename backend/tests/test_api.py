@@ -57,3 +57,20 @@ def test_dfa_check_number_invalid():
     resp = client.post("/api/dfa-check", json={"value": "12.", "kind": "number"})
     data = resp.json()
     assert data["accepted"] is False
+
+
+def test_regex_dfa_endpoint():
+    resp = client.post("/api/regex-dfa", json={"regex": "(a|b)*abb", "test_string": "aabb"})
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["accepted"] is True
+    assert data["regex"] == "(a|b)*abb"
+    assert all(isinstance(state, str) for state in data["states"])
+    assert data["path"][0] == data["start"]
+
+
+def test_regex_dfa_endpoint_reports_syntax_error():
+    resp = client.post("/api/regex-dfa", json={"regex": "a|", "test_string": ""})
+    assert resp.status_code == 200
+    assert resp.json()["accepted"] is False
+    assert resp.json()["states"] == []

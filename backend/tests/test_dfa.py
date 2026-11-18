@@ -18,6 +18,10 @@ def test_identifier_invalid_character():
     assert r.accepted is False
 
 
+def test_identifier_rejects_non_ascii_letters():
+    assert run_identifier_dfa("café").accepted is False
+
+
 def test_identifier_empty():
     assert run_identifier_dfa("").accepted is False
 
@@ -43,3 +47,7 @@ def test_number_invalid_letters():
 def test_number_invalid_leading_dot():
     r = run_number_dfa(".5")
     assert r.accepted is False
+
+
+def test_number_rejects_non_ascii_digits():
+    assert run_number_dfa("١٢").accepted is False

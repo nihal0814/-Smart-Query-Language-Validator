@@ -26,6 +26,7 @@ from .dfa import (
     IDENTIFIER_STATE_DIAGRAM,
     NUMBER_STATE_DIAGRAM,
 )
+from .regex_dfa import RegexSyntaxError, build_regex_dfa
 
 app = FastAPI(
     title="Smart Query Language Validator API",
@@ -55,6 +56,11 @@ class QueryIn(BaseModel):
 class DFACheckIn(BaseModel):
     value: str = Field(..., description="The raw string to test")
     kind: Literal["identifier", "number"] = Field(..., description="Which DFA to run")
+
+
+class RegexDFAIn(BaseModel):
+    regex: str = Field(..., description="Regex using |, implicit concatenation, grouping and *")
+    test_string: str = Field(..., description="String to simulate through the resulting DFA")
 
 
 # ---------------------------------------------------------------------------
@@ -139,3 +145,22 @@ def api_dfa_check(payload: DFACheckIn):
         "reason": result.reason,
         "diagram": diagram,
     }
+
+
+@app.post("/api/regex-dfa")
+def api_regex_dfa(payload: RegexDFAIn):
+    try:
+        return build_regex_dfa(payload.regex, payload.test_string)
+    except RegexSyntaxError as exc:
+        return {
+            "regex": payload.regex,
+            "alphabet": [],
+            "states": [],
+            "start": "",
+            "accepting": [],
+            "transitions": [],
+            "path": [],
+            "symbols": [],
+            "accepted": False,
+            "reason": str(exc),
+        }
